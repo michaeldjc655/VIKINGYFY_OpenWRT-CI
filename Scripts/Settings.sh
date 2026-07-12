@@ -36,6 +36,16 @@ echo "CONFIG_PACKAGE_luci=y" >> ./.config
 echo "CONFIG_LUCI_LANG_zh_Hans=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-theme-$WRT_THEME=y" >> ./.config
 echo "CONFIG_PACKAGE_luci-app-$WRT_THEME-config=y" >> ./.config
+#daed eBPF/BTF内核底层特性要求
+echo "CONFIG_KERNEL_DEBUG_INFO=y" >> ./.config
+echo "CONFIG_KERNEL_DEBUG_INFO_REDUCED=n" >> ./.config
+echo "CONFIG_KERNEL_DEBUG_INFO_BTF=y" >> ./.config
+echo "CONFIG_KERNEL_CGROUPS=y" >> ./.config
+echo "CONFIG_KERNEL_CGROUP_BPF=y" >> ./.config
+echo "CONFIG_KERNEL_BPF_EVENTS=y" >> ./.config
+echo "CONFIG_BPF_TOOLCHAIN_HOST=y" >> ./.config
+echo "CONFIG_KERNEL_XDP_SOCKETS=y" >> ./.config
+echo "CONFIG_PACKAGE_kmod-xdp-sockets-diag=y" >> ./.config
 
 #引入私有扩展配置
 if [ -f "$GITHUB_WORKSPACE/Config/PRIVATE.txt" ]; then
