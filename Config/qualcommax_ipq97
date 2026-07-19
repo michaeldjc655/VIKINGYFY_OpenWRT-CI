@@ -2,4 +2,4 @@
 CONFIG_TARGET_qualcommax=y
 CONFIG_TARGET_qualcommax_ipq95xx=y
 #设备列表
-#CONFIG_TARGET_DEVICE_qualcommax_ipq95xx_DEVICE_askey_sbe1v1k=y
+CONFIG_TARGET_DEVICE_qualcommax_ipq95xx_DEVICE_askey_sbe1v1k=y
