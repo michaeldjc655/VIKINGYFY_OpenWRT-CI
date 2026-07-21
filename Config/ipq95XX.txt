@@ -1,0 +1,6 @@
+# 目标架构与芯片平台
+CONFIG_TARGET_qualcommbe=y
+CONFIG_TARGET_qualcommbe_ipq9574=y
+
+# 目标机型 (注意：根据你使用的源码仓库不同，设备名可能是 askey_sbe1v1k 或 spectrum_sbe1v1k，二选一，默认启用下方这行)
+CONFIG_TARGET_qualcommbe_ipq9574_DEVICE_askey_sbe1v1k=y
