@@ -11,7 +11,8 @@ sed -i "s/192\.168\.[0-9]*\.[0-9]*/$WRT_IP/g" $(find ./feeds/luci/modules/luci-m
 #添加编译日期标识
 sed -i "s/(\(luciversion || ''\))/(\1) + (' \/ $WRT_MARK-$WRT_DATE')/g" $(find ./feeds/luci/modules/luci-mod-status/ -type f -name "10_system.js")
 
-WIFI_SH=$(find ./target/linux/{mediatek/filogic,qualcommax}/base-files/etc/uci-defaults/ -type f -name "*set-wireless.sh" 2>/dev/null)
+# 【修改点 1】增加 qualcommbe 架构支持，确保 SBE1V1K 能够成功修改默认 Wi-Fi 名称和密码
+WIFI_SH=$(find ./target/linux/{mediatek/filogic,qualcommax,qualcommbe}/base-files/etc/uci-defaults/ -type f -name "*set-wireless.sh" 2>/dev/null)
 WIFI_UC="./package/network/config/wifi-scripts/files/lib/wifi/mac80211.uc"
 if [ -f "$WIFI_SH" ]; then
 	#修改WIFI名称
@@ -46,6 +47,22 @@ echo "CONFIG_KERNEL_BPF_EVENTS=y" >> ./.config
 echo "CONFIG_BPF_TOOLCHAIN_HOST=y" >> ./.config
 echo "CONFIG_KERNEL_XDP_SOCKETS=y" >> ./.config
 echo "CONFIG_PACKAGE_kmod-xdp-sockets-diag=y" >> ./.config
+
+# 【修改点 2】专门针对 SBE1V1K (qualcommbe) 注入高通 Wi-Fi 7 闭源固件支持
+if [[ "${WRT_TARGET^^}" == *"QUALCOMMBE"* || "${WRT_TARGET^^}" == *"IPQ9574"* ]]; then
+	echo "Detected qualcommbe (SBE1V1K/IPQ9574) platform, injecting ath12k firmware..."
+	
+	# 删除源码自带的、可能缺失 board-2.bin 的开源/旧版固件
+	rm -rf package/firmware/ath12k-firmware
+	
+	# 拉取包含满血闭源 Wi-Fi 7 驱动的第三方库 (此处以 coolsnowwolf 的库为例)
+	git clone --depth 1 https://github.com/coolsnowwolf/ath12k-firmware.git package/firmware/ath12k-firmware
+	
+	# 强制将闭源驱动依赖写入配置文件
+	echo "CONFIG_PACKAGE_kmod-ath12k=y" >> ./.config
+	echo "CONFIG_PACKAGE_ath12k-firmware-ipq9574=y" >> ./.config
+	echo "CONFIG_PACKAGE_ath12k-firmware-qcn9274=y" >> ./.config
+fi
 
 #引入私有扩展配置
 if [ -f "$GITHUB_WORKSPACE/Config/PRIVATE.txt" ]; then
