@@ -120,8 +120,8 @@ jobs:
         if: env.WRT_TEST != 'true'
         uses: actions/cache@v4
         with:
-          key: ccache-${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-${{env.WRT_HASH}}
-          restore-keys: ccache-${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-
+          key: v2-ccache-${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-${{env.WRT_HASH}}
+          restore-keys: v2-ccache-${{env.WRT_CONFIG}}-${{env.WRT_INFO}}-
           path: ./wrt/.ccache
 
       - name: Update Feeds
