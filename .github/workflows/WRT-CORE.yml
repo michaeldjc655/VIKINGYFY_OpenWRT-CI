@@ -79,7 +79,7 @@ jobs:
           sudo -E apt -yqq autoclean
           sudo -E apt -yqq clean
           # 补充工具链所需的 libdeflate-dev, zlib1g-dev, cmake, ninja-build 等关键包
-          sudo -E apt -yqq install dos2unix libfuse-dev build-essential clang llvm lld cmake ninja-build zlib1g-dev libz-dev libdeflate-dev curl flex bison gawk gettext git libssl-dev libncurses-dev unzip python3
+          sudo -E apt -yqq install dos2unix libfuse-dev build-essential clang llvm lld cmake ninja-build zlib1g-dev libz-dev curl flex bison gawk gettext git libssl-dev libncurses-dev unzip python3
           sudo bash -c 'bash <(curl -sL https://build-scripts.immortalwrt.org/init_build_environment.sh)'
           sudo -E systemctl daemon-reload
           sudo -E timedatectl set-timezone "Asia/Shanghai"
