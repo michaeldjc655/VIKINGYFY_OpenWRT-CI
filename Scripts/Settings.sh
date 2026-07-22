@@ -49,19 +49,18 @@ echo "CONFIG_KERNEL_XDP_SOCKETS=y" >> ./.config
 echo "CONFIG_PACKAGE_kmod-xdp-sockets-diag=y" >> ./.config
 
 # 【修改点 2】专门针对 SBE1V1K (qualcommbe) 注入高通 Wi-Fi 7 闭源固件支持
-if [[ "${WRT_TARGET^^}" == *"QUALCOMMBE"* || "${WRT_TARGET^^}" == *"IPQ9574"* ]]; then
+if [[ "${WRT_TARGET^^}" == *"QUALCOMMBE"* || "${WRT_TARGET^^}" == *"IPQ9574"* || "${WRT_TARGET^^}" == *"IPQ95XX"* ]]; then
 	echo "Detected qualcommbe (SBE1V1K/IPQ9574) platform, injecting ath12k firmware..."
-	
-	# 删除源码自带的、可能缺失 board-2.bin 的开源/旧版固件
-	rm -rf package/firmware/ath12k-firmware
-	
-	# 拉取包含满血闭源 Wi-Fi 7 驱动的第三方库 (此处以 coolsnowwolf 的库为例)
-	git clone --depth 1 https://github.com/coolsnowwolf/ath12k-firmware.git package/firmware/ath12k-firmware
 	
 	# 强制将闭源驱动依赖写入配置文件
 	echo "CONFIG_PACKAGE_kmod-ath12k=y" >> ./.config
 	echo "CONFIG_PACKAGE_ath12k-firmware-ipq9574=y" >> ./.config
 	echo "CONFIG_PACKAGE_ath12k-firmware-qcn9274=y" >> ./.config
+
+	# 【新增的终极修复代码】暴力删除源码中其它机型写错的幽灵依赖！
+	echo "Fixing OpenWrt source code bugs for ALL_PROFILES..."
+	find target/linux/qualcommbe/ -type f -name "*.mk" -exec sed -i 's/ath11k-firmware-ipq9574//g' {} +
+	find target/linux/qualcommbe/ -type f -name "*.mk" -exec sed -i 's/kmod-qrtr-smd//g' {} +
 fi
 
 #引入私有扩展配置
