@@ -105,10 +105,10 @@ jobs:
           cd ./wrt/ && echo "WRT_HASH=$(git log -1 --pretty=format:'%h')" >> $GITHUB_ENV
 
           # GitHub Action 移除国内下载源
-          PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
-          if [ -f "$PROJECT_MIRRORS_FILE" ]; then
-            sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
-          fi
+          #PROJECT_MIRRORS_FILE="./scripts/projectsmirrors.json"
+          #if [ -f "$PROJECT_MIRRORS_FILE" ]; then
+            #sed -i '/.cn\//d; /tencent/d; /aliyun/d' "$PROJECT_MIRRORS_FILE"
+          #fi
 
       - name: Check Scripts
         run: |
@@ -157,7 +157,7 @@ jobs:
         run: |
           cd ./wrt/
 
-          make download -j1 V=s
+          make download -j$(nproc)
 
       - name: Compile Firmware
         if: env.WRT_TEST != 'true'
